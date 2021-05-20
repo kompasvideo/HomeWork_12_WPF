@@ -35,6 +35,9 @@ namespace HomeWork_WPF
         /// CollectionViewSource для департаментов
         /// </summary>
         System.ComponentModel.ICollectionView myView;
+        /// <summary>
+        /// Конструктор без параметров
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();

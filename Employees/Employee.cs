@@ -109,6 +109,9 @@ namespace HomeWork_WPF
         {
             return string.Format($"{LastName} {FirstName}");
         }
+        /// <summary>
+        /// Сортировка по окладу
+        /// </summary>
         public class SortBySalary : IComparer<Employee>
         {
             public int Compare(Employee x, Employee y)
