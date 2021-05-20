@@ -1,0 +1,23 @@
+﻿<Window x:Class="HomeWork_WPF.Departments.DelDepartmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeWork_WPF.Departments"
+        mc:Ignorable="d"
+        Title="Удалить отдел" Height="450" Width="350" WindowStartupLocation="CenterScreen">
+    <StackPanel>
+        <Label Content="Выберите отдел, который вы ходите удалить"/>
+        <TreeView x:Name="treeView" HorizontalAlignment="Left" VerticalAlignment="Top" Height="290" Width="345" SelectedItemChanged="treeView_SelectedItemChanged">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Departments}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <WrapPanel>
+            <Button x:Name="bOK" Content="OK" Width="80" Height="20" Margin="50,30,40,0" IsDefault="True" Click="bOK_Click"/>
+            <Button x:Name="bCancel" Content="Отмена" Width="80" Height="20" Margin="40,30,0,0" IsCancel="True" Click="bCancel_Click"/>
+        </WrapPanel>
+    </StackPanel>
+</Window>
