@@ -12,7 +12,7 @@ namespace HomeWork_WPF.Employees
         { 
             get
             {
-                return MainWindow.GetSalary(DepartmentId);
+                return Model.GetSalary(DepartmentId);
             }
         }
         public Manager(string firstName, string lastName, int age, uint departmentId, string job = "Руководитель") : 

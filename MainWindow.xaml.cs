@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HomeWork_WPF.Departments;
+using HomeWork_WPF.Employees;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,8 +15,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using HomeWork_WPF.Departments;
-using HomeWork_WPF.Employees;
 
 namespace HomeWork_WPF
 {
@@ -23,14 +23,11 @@ namespace HomeWork_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        /// Организация
-        static Repository repository;
-        // выбранный TreeViewItem 
-        Department select;
-        /// <summary>
-        /// сумма оклада руководителя департамента
-        /// </summary>
-        static int salary = 0;
+        private Model DataModel
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// CollectionViewSource для департаментов
         /// </summary>
@@ -41,35 +38,14 @@ namespace HomeWork_WPF
         public MainWindow()
         {
             InitializeComponent();
-            // создаём организацию
-            repository = new Repository();
-
-            select = Repository.Departments[0];
-            treeView.ItemsSource = Repository.Departments;
-            myView = CollectionViewSource.GetDefaultView(repository.Employees);
+            this.DataModel = new Model();
+            treeView.ItemsSource = this.DataModel.GetDepartments();
+            myView = CollectionViewSource.GetDefaultView(this.DataModel.GetEmployees());
             WPFDataGrid.ItemsSource = myView;
-            FIO.DataContext = new SelectProvider(select);
-            Salary.DataContext = new SelectProvider(select);
+            FIO.DataContext = this.DataModel.GetSelect();
+            Salary.DataContext = this.DataModel.GetSelect();
         }
 
-        /// <summary>
-        /// Фильтр для показа сотрудников данного департамента
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        private bool myFilter(object obj)
-        {
-            if (select.DepartmentId == 0) return true;
-            else
-            {
-                var e = obj as Employee;
-                if (e != null)
-                {
-                    if (select.DepartmentId == e.DepartmentId) return true;
-                }
-                return false;
-            }
-        }
         
         /// <summary>
         /// Обработчик выделения департамента
@@ -78,86 +54,11 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            select = (Department)e.NewValue;
-            FIO.DataContext = new SelectProvider(select);
-            Salary.DataContext = new SelectProvider(select);
-            myView.Filter = new Predicate<object>(myFilter);
+            this.DataModel.SetSelect(e.NewValue);
+            myView.Filter = new Predicate<object>(this.DataModel.myFilter);
         }
         
-        /// <summary>
-        /// Подсчитывает оклад руководителя департамента данног департамента
-        /// </summary>
-        /// <param name="p_depId"></param>
-        public static void SetSalary(uint p_depId)
-        {
-            foreach (var emp in repository.Employees)
-            {
-                if (emp.DepartmentId == p_depId)
-                {
-                    if (emp.GetType() == typeof(Worker))
-                    {
-                        salary += emp.Salary * 8 * 23;
-                    }
-                    if (emp.GetType() == typeof(Intern))
-                    {
-                        salary += emp.Salary;
-                    }
-                }
-            }           
-        }
-
-        /// <summary>
-        /// Подсчитывает оклад руководителя департамента
-        /// </summary>
-        /// <param name="p_depId"></param>
-        /// <returns></returns>
-        public static int GetSalary(uint p_depId)
-        {
-            salary = 0;
-            foreach (var dep in Repository.Departments)
-            {
-                if (dep.DepartmentId == p_depId)
-                    SearchDepartment(p_depId, dep.Departments, true);
-                else
-                    SearchDepartment(p_depId, dep.Departments,false);
-            }
-            return salary;
-        }
-
-        /// <summary>
-        /// Ищет дочерние департаменты 
-        /// </summary>
-        /// <param name="p_depId"></param>
-        /// <param name="departments"></param>
-        /// <param name="child"></param>
-        private static void SearchDepartment(uint p_depId, ObservableCollection<Department> departments,bool child)
-        {            
-            foreach (var dep in departments)
-            {
-                if (dep.DepartmentId == p_depId)
-                {
-                    SetSalary(p_depId);
-                    if (dep.Departments != null)
-                    {
-                        foreach (var depR in dep.Departments)
-                        {
-                            SearchDepartment(p_depId, dep.Departments, true);
-                        }
-                    }
-                }
-                else
-                {
-                    if (child)
-                    {
-                        SetSalary(p_depId);
-                    }
-                    if (dep.Departments != null)
-                    {
-                        SearchDepartment(p_depId, dep.Departments, child);
-                    }
-                }
-            }
-        }
+        
         /// <summary>
         /// Выбран пункт меню "Добавить отдел"
         /// </summary>
@@ -175,9 +76,9 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void DelDepartment_Click(object sender, RoutedEventArgs e)
         {
-            DelDepartmentWindow delDepartmentWindow = new DelDepartmentWindow(Repository.Departments, repository.Employees);
+            DelDepartmentWindow delDepartmentWindow = new DelDepartmentWindow(Repository.Departments, Model.repository.Employees);
             delDepartmentWindow.ShowDialog();
-            WPFDataGrid.ItemsSource = repository.Employees;
+            WPFDataGrid.ItemsSource = Model.repository.Employees;
         }
         /// <summary>
         /// Выбран пункт меню "Редактировать отдел"
@@ -200,8 +101,8 @@ namespace HomeWork_WPF
             AddWorkerWindow addWorkerWindow = new AddWorkerWindow(Repository.Departments);
             if (addWorkerWindow.ShowDialog() == true)
             {
-                repository.Employees.Add(addWorkerWindow.GetWorker());
-                Salary.DataContext = new SelectProvider(select);
+                Model.repository.Employees.Add(addWorkerWindow.GetWorker());
+                Salary.DataContext = this.DataModel.GetSelect();
             }
         }
         
@@ -221,7 +122,7 @@ namespace HomeWork_WPF
             Employee worker = (Employee)select;
             if (MessageBox.Show($"Удалить сотрудника {worker.FirstName} {worker.LastName}", "Удалить сотрудника", MessageBoxButton.YesNo) == MessageBoxResult.No)
                 return;
-            repository.Employees.Remove(worker);
+            Model.repository.Employees.Remove(worker);
         }
         
         /// <summary>
@@ -238,7 +139,7 @@ namespace HomeWork_WPF
                 return;
             }
             Employee worker = (Employee)select;
-            EditWorkerWindow editWorkerWindow = new EditWorkerWindow(worker, repository);
+            EditWorkerWindow editWorkerWindow = new EditWorkerWindow(worker, Model.repository);
             if (editWorkerWindow.ShowDialog() == true)
             {
                 //// редактируем сотрудника
@@ -292,8 +193,8 @@ namespace HomeWork_WPF
             string name = mi.Name;
             // удаляеи из имени последний символ
             string newName = name.Substring(0, name.Length - 1);
-            repository.Sort(newName);
-            myView = CollectionViewSource.GetDefaultView(repository.Employees);
+            Model.repository.Sort(newName);
+            myView = CollectionViewSource.GetDefaultView(Model.repository.Employees);
             WPFDataGrid.ItemsSource = myView;
         }
     }

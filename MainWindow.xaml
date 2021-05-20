@@ -40,7 +40,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <StackPanel DockPanel.Dock="Top" Height="50">
+        <StackPanel DockPanel.Dock="Top" Height="50" DataContext="SelectProvider">
             <Label x:Name="FIO" Content='{Binding manager, Converter={StaticResource myFIOConverter}}'/>
             <Label x:Name="Salary"  Content='{Binding manager.Salary, Converter={StaticResource mySalaryConverter}}'/>
         </StackPanel>

@@ -13,19 +13,19 @@ namespace HomeWork_WPF
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        Department select;        
+        private Manager managerP;
         public Manager manager
         {
-            get { return select.manager; }
+            get { return managerP; }
             set
             {
-                select.manager = value;
+                managerP = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.manager)));
             }
         }
-        public SelectProvider(Department p_select)
+        public SelectProvider(Manager manager)
         {
-            select = p_select;
+            this.manager = manager;
         }
     }
 }
