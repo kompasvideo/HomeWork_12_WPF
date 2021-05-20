@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace HomeWork_WPF
 {
+    /// <summary>
+    /// Объединение, позволяет получить тип класса из Employee
+    /// </summary>
     public enum EnEmployee: int
     {
         Employee,
@@ -14,6 +17,20 @@ namespace HomeWork_WPF
         Intern,
         Manager
     }
+
+    /// <summary>
+    /// Критерий сортировки
+    /// </summary>
+    public enum SortedCriterion
+    {
+        FirstName,
+        LastName,
+        Age,
+        Salary,
+        Department,
+        Employee
+    }
+
     public abstract class Employee : INotifyPropertyChanged
     {
         string firstName;
@@ -87,7 +104,14 @@ namespace HomeWork_WPF
             }
         }
 
-
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="age"></param>
+        /// <param name="departmentId"></param>
+        /// <param name="job"></param>
         public Employee(string firstName, string lastName, int age, uint departmentId, string job)
         {
             FirstName = firstName;
@@ -98,13 +122,24 @@ namespace HomeWork_WPF
             eEmployee = EnEmployee.Employee;
         }
 
+        /// <summary>
+        /// Событие PropertyChanged
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Обработчик события PropertyChanged
+        /// </summary>
+        /// <param name="info"></param>
         private void OnPropertyChanged(string info)
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
+        /// <summary>
+        /// Вернуть как строку
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format($"{LastName} {FirstName}");
@@ -112,7 +147,7 @@ namespace HomeWork_WPF
         /// <summary>
         /// Сортировка по окладу
         /// </summary>
-        public class SortBySalary : IComparer<Employee>
+        private class SortBySalary : IComparer<Employee>
         {
             public int Compare(Employee x, Employee y)
             {
@@ -123,7 +158,10 @@ namespace HomeWork_WPF
                 else return -1;
             }
         }
-        public class SortByAge : IComparer<Employee>
+        /// <summary>
+        /// Сортировка по возрасту
+        /// </summary>
+        private class SortByAge : IComparer<Employee>
         {
             public int Compare(Employee x, Employee y)
             {
@@ -134,7 +172,10 @@ namespace HomeWork_WPF
                 else return -1;
             }
         }
-        public class SortByFirstName : IComparer<Employee>
+        /// <summary>
+        /// Сортировка по FirstName
+        /// </summary>
+        private class SortByFirstName : IComparer<Employee>
         {
             public int Compare(Employee x, Employee y)
             {
@@ -144,7 +185,10 @@ namespace HomeWork_WPF
                 return String.Compare(X.FirstName, Y.FirstName);
             }
         }
-        public class SortByLastName : IComparer<Employee>
+        /// <summary>
+        /// Сортировка по вLastName
+        /// </summary>
+        private class SortByLastName : IComparer<Employee>
         {
             public int Compare(Employee x, Employee y)
             {
@@ -154,7 +198,10 @@ namespace HomeWork_WPF
                 return String.Compare(X.LastName, Y.LastName);
             }
         }
-        public class SortByDepartment : IComparer<Employee>
+        /// <summary>
+        /// Сортировка по имени отдела (департамента)
+        /// </summary>
+        private class SortByDepartment : IComparer<Employee>
         {
             public int Compare(Employee x, Employee y)
             {
@@ -165,7 +212,10 @@ namespace HomeWork_WPF
                 return String.Compare(x_str, y_str);
             }
         }
-        public class SortByEmployee : IComparer<Employee>
+        /// <summary>
+        /// Сортировка по должности
+        /// </summary>
+        private class SortByEmployee : IComparer<Employee>
         {
             public int Compare(Employee x, Employee y)
             {
@@ -175,6 +225,27 @@ namespace HomeWork_WPF
                 string y_str = Y.EEmployee.ToString();
                 return String.Compare(x_str, y_str);
             }
+        }
+
+        /// <summary>
+        /// Сортировка по критерию
+        /// </summary>
+        public static IComparer<Employee> SortedBy(SortedCriterion Criterion)
+        {
+            switch (Criterion)
+            {
+                case SortedCriterion.FirstName:
+                    return new SortByFirstName();
+                case SortedCriterion.LastName:
+                    return new SortByFirstName();
+                case SortedCriterion.Age:
+                    return new SortByAge();
+                case SortedCriterion.Salary:
+                    return new SortBySalary();
+                case SortedCriterion.Department:
+                    return new SortByDepartment();
+            }
+            return new SortByEmployee();
         }
     }
 }

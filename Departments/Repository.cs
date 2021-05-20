@@ -17,9 +17,9 @@ namespace HomeWork_WPF
         // Список сотрудников
         public ObservableCollection<Employee> Employees { get; set; }
         // Список сотрудников для считывания из Json
-        List<Worker> listEmployees;
-        List<Employee> listSortEmployees;
-        static int w_iterator;
+        private List<Worker> _listEmployees;
+        private List<Employee> _listSortEmployees;
+        private static int _iterator;
 
         public Repository()
         {
@@ -207,7 +207,7 @@ namespace HomeWork_WPF
             //    new Intern("Имя_128","Фамилия_128", 40,54),
             //};
             #endregion
-            w_iterator = 0;
+            _iterator = 0;
             //SaveManager(Departments);
             //SaveToJson();
             LoadJson();
@@ -222,7 +222,7 @@ namespace HomeWork_WPF
             json = File.ReadAllText("employees.json");
             //Employees = JsonConvert.DeserializeObject<ObservableCollection<Employee>>(json);
             Employees = new ObservableCollection<Employee>();
-            listEmployees = JsonConvert.DeserializeObject<List<Worker>>(json);
+            _listEmployees = JsonConvert.DeserializeObject<List<Worker>>(json);
             ListToObservableCollection();
             SaveManager(Departments);
         }
@@ -232,7 +232,7 @@ namespace HomeWork_WPF
         /// </summary>
         private void ListToObservableCollection()
         {
-            foreach(var emp in listEmployees)
+            foreach(var emp in _listEmployees)
             {
                 switch (emp.EEmployee)
                 {
@@ -270,11 +270,16 @@ namespace HomeWork_WPF
         {
             foreach (var dep in p_departments)
             {
-                dep.manager = Employees[w_iterator++] as Manager;
+                dep.manager = Employees[_iterator++] as Manager;
                 if (dep.Departments != null) SaveManager(dep.Departments);
             }
         }
 
+        /// <summary>
+        /// Возвращяет имя отдела(департамента)
+        /// </summary>
+        /// <param name="p_depId">Номер отдела(департамента)</param>
+        /// <returns></returns>
         public static string GetNameDepartment(uint p_depId)
         {
             foreach (var dep in Departments)
@@ -309,33 +314,36 @@ namespace HomeWork_WPF
             }
             return "";
         }
-
+        /// <summary>
+        /// Сортировка сотрудников
+        /// </summary>
+        /// <param name="name"></param>
         public void Sort(string name)
         {
-            listSortEmployees = Employees.ToList();
+            _listSortEmployees = Employees.ToList();
             switch (name)
             {
                 case "LastName":
-                    listSortEmployees.Sort(new Employee.SortByLastName());
+                    _listSortEmployees.Sort(Employee.SortedBy(SortedCriterion.LastName));
                     break;
                 case "FirstName":
-                    listSortEmployees.Sort(new Employee.SortByFirstName());
+                    _listSortEmployees.Sort(Employee.SortedBy(SortedCriterion.FirstName));
                     break;
                 case "Employee":
-                    listSortEmployees.Sort(new Employee.SortByEmployee());
+                    _listSortEmployees.Sort(Employee.SortedBy(SortedCriterion.Employee)); 
                     break;
                 case "Age":
-                    listSortEmployees.Sort(new Employee.SortByAge());
+                    _listSortEmployees.Sort(Employee.SortedBy(SortedCriterion.Age));
                     break;
                 case "Department":
-                    listSortEmployees.Sort(new Employee.SortByDepartment());
+                    _listSortEmployees.Sort(Employee.SortedBy(SortedCriterion.Department));
                     break;
                 case "Salary":
-                    listSortEmployees.Sort(new Employee.SortBySalary());
+                    _listSortEmployees.Sort(Employee.SortedBy(SortedCriterion.Salary));
                     break;
             }
             Employees.Clear();
-            Employees = new ObservableCollection<Employee>(listSortEmployees);
+            Employees = new ObservableCollection<Employee>(_listSortEmployees);
         }
     }
 }
