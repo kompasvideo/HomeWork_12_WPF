@@ -21,14 +21,16 @@ namespace HomeWork_WPF.Employees
     /// </summary>
     public partial class EditWorkerWindow : Window
     {
-        // сотрудник
-        public Employee worker;
+        /// <summary>
+        /// Ссылка на Model
+        /// </summary>
+        private Model DataModel { get; set; }
 
-        // отдел
-        ObservableCollection<Department> departments;
+        /// <summary>
+        /// Показывает выбрана ли должность
+        /// </summary>
+        bool vacancy;
 
-        // выбранный отдел
-        Department select;
 
         // свойство - изменён отдел
         public bool ChangedDepartment { get; set; }
@@ -36,45 +38,20 @@ namespace HomeWork_WPF.Employees
         // старый DepartmentId отдела
         public uint DepartmentOldId { get; set; }
 
-        // ссылка на класс организации
-        Repository repository;
-
-        string[] employees = { "Руководитель", "Рабочий", "Интерн" };
-
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="worker"></param>
-        public EditWorkerWindow(Employee worker, Repository repository)
+        public EditWorkerWindow(Model DataModel)
         {
             InitializeComponent();
-            this.worker = worker;
-            this.departments = Repository.Departments;
-            this.repository = repository;
-            lbEmployees.ItemsSource = employees;
-            switch(worker.EEmployee)
-            {
-                case EnEmployee.Manager:
-                    lbEmployees.SelectedIndex = 0;
-                    break;
-                case EnEmployee.Worker:
-                    lbEmployees.SelectedIndex = 1;
-                    break;
-                case EnEmployee.Intern:
-                    lbEmployees.SelectedIndex = 2;
-                    break;
-            }
-            SetProperty();
+            this.DataModel = DataModel;
+            grid1.DataContext = this.DataModel.GetSelectEmployeeProvider();
+            lbEmployees.ItemsSource = this.DataModel.employeesList;
+            lbEmployees.SelectedIndex = this.DataModel.GetEmployeeVacancy();
+            vacancy = false;
         }
 
-        void SetProperty()
-        {
-            tbLastName.Text = worker.LastName;
-            tbFirstName.Text = worker.FirstName;
-            tbAge.Text = worker.Age.ToString();
-            tbDepartament.Content = Repository.GetNameDepartment(worker.DepartmentId);
-            DepartmentOldId = worker.DepartmentId;
-        }
 
         /// <summary>
         /// Нажата кнопка "ОК"
@@ -83,67 +60,7 @@ namespace HomeWork_WPF.Employees
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            worker.LastName = tbLastName.Text;
-            worker.FirstName = tbFirstName.Text;
-            int age;
-            if (! int.TryParse(tbAge.Text, out age))
-            {
-                MessageBox.Show("Ошибка при вводе возраста сотрудника. Должно быть число", "Редактировать сотрудника");
-                return;
-            }
-            else
-            {
-                worker.Age = age;
-            }
-            if (select != null)
-            {
-                if (select.Name == null)
-                {
-                    // отдел не изменён
-                    ChangedDepartment = false;
-                }
-                else
-                {
-                    if (select.DepartmentId == 0)
-                    {
-                        MessageBox.Show("Ошибка. Не выбран отдел", "Добавить сотрудника");
-                        return;
-                    }
-                    ChangedDepartment = true;
-                    worker.DepartmentId = select.DepartmentId;
-                }
-            }
-            switch (lbEmployees.SelectedItem)
-            {
-                case "Руководитель":
-                    if (worker.EEmployee != EnEmployee.Manager)
-                    {
-                        repository.Employees.Remove(worker);
-                        worker = new Manager(worker.FirstName, worker.LastName, worker.Age, worker.DepartmentId);
-                        repository.Employees.Add(worker);
-                    }
-                    break;
-                case "Рабочий":
-                    if (worker.EEmployee != EnEmployee.Worker)
-                    {
-                        repository.Employees.Remove(worker);
-                        worker = new Worker(worker.FirstName, worker.LastName, worker.Age, worker.DepartmentId);
-                        repository.Employees.Add(worker);
-                    }
-                    break;
-                case "Интерн":
-                    if (worker.EEmployee != EnEmployee.Intern)
-                    {
-                        repository.Employees.Remove(worker);
-                        worker = new Intern(worker.FirstName, worker.LastName, worker.Age, worker.DepartmentId);
-                        repository.Employees.Add(worker);
-                    }
-                    break;
-                default:
-                    MessageBox.Show("Выберите сначала должность сотрудника", "Добавить сотрудника");
-                    return;
-
-            }
+            this.DataModel.SelectEmployeeEdit(vacancy);
             DialogResult = true;
             this.Close();
         }
@@ -159,27 +76,25 @@ namespace HomeWork_WPF.Employees
         }
 
         /// <summary>
-        /// Возвращяет структуру worker
-        /// </summary>
-        /// <returns></returns>
-        public Employee GetWorker()
-        {
-            return worker;
-        }
-
-        /// <summary>
         /// Нажата кнопка "Изменить отдел"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow(departments);
-            if (selectDepartmentWindow.ShowDialog() == true)
-            {
-                select = selectDepartmentWindow.GetDepartment();
-                tbDepartament.Content = select.Name;
-            }
-        }        
+            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow(this.DataModel);
+            selectDepartmentWindow.ShowDialog();
+        }
+
+        /// <summary>
+        /// Смена должности
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lbEmployees_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            vacancy = true;
+            this.DataModel.SetNewVacancy(e.AddedItems[0]);
+        }
     }
 }

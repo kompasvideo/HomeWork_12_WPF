@@ -20,17 +20,20 @@ namespace HomeWork_WPF.Departments
     /// </summary>
     public partial class EditDepartmentWindow : Window
     {
-        // Список отделов
-        ObservableCollection<Department> departments;
-
-        // выбранный TreeViewItem 
-        Department select;
-
-        public EditDepartmentWindow(ObservableCollection<Department> departments)
+        private Model DataModel
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// Конструктор с параметром
+        /// </summary>
+        /// <param name="departments"></param>
+        public EditDepartmentWindow(Model DataModel)
         {
             InitializeComponent();
-            this.departments = departments;
-            treeView.ItemsSource = departments;
+            this.DataModel = DataModel;
+            treeView.ItemsSource = this.DataModel.GetDepartments();
         }
 
         /// <summary>
@@ -40,7 +43,8 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            select = (Department)e.NewValue;
+            this.DataModel.SetSelectDialog(e.NewValue);
+            tbNewName.DataContext = this.DataModel.GetDepartmentName();
         }
 
         /// <summary>
@@ -50,7 +54,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            select.Name = tbNewName.Text;
+            //select.Name = tbNewName.Text;
             DialogResult = true;
             this.Close();
         }

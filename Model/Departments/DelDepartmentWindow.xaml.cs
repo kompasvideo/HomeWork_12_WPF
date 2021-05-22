@@ -21,21 +21,20 @@ namespace HomeWork_WPF.Departments
     /// </summary>
     public partial class DelDepartmentWindow : Window
     {
-        // Список содрудников
-        ObservableCollection<Employee> Employees;
-
-        // Список отделов
-        ObservableCollection<Department> departments;
-
-        // выбранный TreeViewItem 
-        Department select;
-
-        public DelDepartmentWindow(ObservableCollection<Department> departments, ObservableCollection<Employee> Employees)
+        private Model DataModel
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// Конструктор с параметром
+        /// </summary>
+        /// <param name="DataModel"></param>
+        public DelDepartmentWindow(Model DataModel)
         {
             InitializeComponent();
-            this.departments = departments;
-            this.Employees = Employees;
-            treeView.ItemsSource = departments;
+            this.DataModel = DataModel;
+            treeView.ItemsSource = this.DataModel.GetDepartments();
         }
 
         /// <summary>
@@ -45,72 +44,8 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            if (select.DepartmentId > 0)
-                DeleteDepartmentAndWorkers(select);
+            this.DataModel.DeleteDepartmentAndWorkers(this.DataModel.GetSelectDialog());
             this.Close();
-        }
-
-        /// <summary>
-        /// Удаляет отдел и находящихся в нём сотрудников рекурсивно
-        /// </summary>
-        /// <param name="select"></param>
-        void DeleteDepartmentAndWorkers(Department select)
-        {
-            // получаем список подчинённых отделов
-            ObservableCollection<Department> l_departments = select.Departments;
-
-            // получаем Id отдела
-            uint departmentId = select.DepartmentId;
-
-            while (true)
-            {
-                // получаем позицию в списке сотрудников 
-                bool poisk = false;
-                int count = Employees.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    if (Employees[i].DepartmentId == departmentId)
-                    {
-                        // и удаляем его
-                        poisk = true;
-                        Employees.Remove(Employees[i]);
-                        break;
-                    }
-                }
-                if (!poisk) break;
-            }
-            DeleteDepartment(departments, select);
-
-            // проходимся по подчинённым отделам
-            foreach (var dep in l_departments)
-            {
-                DeleteDepartmentAndWorkers(dep);
-            }
-        }
-
-        /// <summary>
-        /// Удаляет отдел
-        /// </summary>
-        /// <param name="departments"></param>
-        /// <param name="select"></param>
-        void DeleteDepartment(ObservableCollection<Department> departments, Department select)
-        {
-            bool poisk = false;
-            foreach (var dep in departments)
-            {
-                if (dep.DepartmentId == select.DepartmentId)
-                {
-                    poisk = true;
-                    break;
-                }
-                ObservableCollection<Department> l_departments = dep.Departments;
-                if (l_departments.Count > 0)
-                {
-                    DeleteDepartment(l_departments, select);
-                }
-            }
-            if (poisk)
-                departments.Remove(select);
         }
 
         /// <summary>
@@ -130,7 +65,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            select = (Department)e.NewValue;
+            this.DataModel.SetSelectDialog(e.NewValue);
         }
     }
 }

@@ -9,21 +9,28 @@ namespace HomeWork_WPF.Employees
     /// </summary>
     public partial class AddWorkerWindow : Window
     {
-        // Структура сотрудника
-        public Employee worker;
+        /// <summary>
+        /// Ссылка на Model
+        /// </summary>
+        private Model DataModel { get; set; }
 
-        // Структура отделов
-        ObservableCollection<Department> departments;
+        /// <summary>
+        /// Показывает выбран ли отдел 
+        /// </summary>
+        bool department;
+        /// <summary>
+        /// Показывает выбрана ли должность
+        /// </summary>
+        bool vacancy;
 
-        // выбранный отдел
-        Department select;
-        string[] employees = {"Руководитель", "Рабочий", "Интерн"};
-
-        public AddWorkerWindow(ObservableCollection<Department> departments)
+        public AddWorkerWindow(Model DataModel)
         {
             InitializeComponent();
-            this.departments = departments;
-            lbEmployees.ItemsSource = employees;
+            this.DataModel = DataModel;
+            grid1.DataContext = this.DataModel.GetNewEmployeeProvider();
+            lbEmployees.ItemsSource = this.DataModel.employeesList;
+            department = false;
+            vacancy = false;
         }
 
         /// <summary>
@@ -33,33 +40,15 @@ namespace HomeWork_WPF.Employees
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            if (select.Name == null || select.DepartmentId == 0)
+            if (!department)
             {
                 MessageBox.Show("Ошибка. Не выбран отдел", "Добавить сотрудника");
                 return;
             }
-            int age;
-            if (! int.TryParse(tbAge.Text, out age))
+            if (!vacancy)
             {
-                MessageBox.Show("Ошибка при вводе возраста сотрудника. Должно быть число", "Добавить сотрудника");
+                MessageBox.Show("Ошибка. Не выбрана должность", "Добавить сотрудника");
                 return;
-            }
-
-            switch (lbEmployees.SelectedItem)
-            {
-                case "Руководитель":
-                    worker = new Manager(tbFirstName.Text, tbLastName.Text, age, select.DepartmentId);
-                    break;
-                case "Рабочий":
-                    worker = new Worker(tbFirstName.Text, tbLastName.Text, age, select.DepartmentId);
-                    break;
-                case "Интерн":
-                    worker = new Intern(tbFirstName.Text, tbLastName.Text, age, select.DepartmentId);
-                    break;
-                default:
-                    MessageBox.Show("Выберите сначала должность сотрудника", "Добавить сотрудника");
-                    return;
-
             }
             DialogResult = true;
             this.Close();
@@ -76,26 +65,28 @@ namespace HomeWork_WPF.Employees
         }
 
         /// <summary>
-        /// Возвращяет структуру Employee
-        /// </summary>
-        /// <returns></returns>
-        public Employee GetWorker()
-        {
-            return worker;
-        }        
-
-        /// <summary>
         /// Нажата кнопка "Выбрать отдел"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow(departments);
+            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow(this.DataModel);
             if (selectDepartmentWindow.ShowDialog() == true)
             {
-                select = selectDepartmentWindow.GetDepartment();
+                department = true;
             }
+        }
+
+        /// <summary>
+        /// Выбран список должностей
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lbEmployees_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            vacancy = true;
+            this.DataModel.SetNewVacancy(e.AddedItems[0]);
         }
     }
 }

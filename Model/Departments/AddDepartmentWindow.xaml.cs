@@ -20,23 +20,20 @@ namespace HomeWork_WPF.Departments
     /// </summary>
     public partial class AddDepartmentWindow : Window
     {
-        // Список отделов
-        ObservableCollection<Department> departments;
-
-        // выбранный TreeViewItem 
-        Department select;
-
+        private Model DataModel
+        {
+            get;
+            set;
+        }
         /// <summary>
-        /// DepartmentId
+        /// Конструктор с параметрами
         /// </summary>
-        static uint i;
-
-        public AddDepartmentWindow(ObservableCollection<Department> departments)
+        /// <param name="DataModel"></param>
+        public AddDepartmentWindow(Model DataModel)
         {
             InitializeComponent();
-            this.departments = departments;
-            treeView.ItemsSource = departments;
-            //DepartmentClass tvi_main = (DepartmentClass)treeView.Items.CurrentItem;
+            this.DataModel = DataModel;
+            treeView.ItemsSource = this.DataModel.GetDepartments();
         }
 
         /// <summary>
@@ -46,26 +43,10 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            i = 0;
-            select.Departments.Add(new Department(tbNewName.Text,
-                GetNextDepartmentId(departments) + 1, new ObservableCollection<Department>()));
+            this.DataModel.AddDepartment(tbNewName.Text);
             this.Close();
         }
 
-        /// <summary>
-        /// Получает наибольший DepartmentId
-        /// </summary>
-        /// <param name="departments"></param>
-        /// <returns></returns>
-        private uint GetNextDepartmentId(ObservableCollection<Department> departments)
-        {
-            foreach (var dep in departments)
-            {
-                if (dep.DepartmentId > i) i = dep.DepartmentId;
-                if (dep.Departments.Count > 0) GetNextDepartmentId(dep.Departments);
-            }
-            return i;
-        }
 
         /// <summary>
         /// Нажата кнопка "Отмена"
@@ -84,7 +65,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            select = (Department)e.NewValue;
+            this.DataModel.SetSelectDialog(e.NewValue);
         }
     }
 }

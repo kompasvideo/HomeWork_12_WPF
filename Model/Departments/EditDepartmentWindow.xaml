@@ -17,7 +17,9 @@
         </TreeView>
         <WrapPanel Margin="0,30,0,0">
             <Label Content="2. Введите новое имя отдела: "/>
-            <TextBox x:Name="tbNewName" Text="Отдел" Width="160" Margin="0,4,0,0"/>
+            <TextBox x:Name="tbNewName" Text="{Binding Name}" Width="160" Margin="0,4,0,0"  >
+                    
+            </TextBox>
         </WrapPanel>
         <WrapPanel>
             <Button x:Name="bOK" Content="OK" Width="80" Height="20" Margin="50,30,40,0" IsDefault="True" Click="bOK_Click"/>

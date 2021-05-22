@@ -23,11 +23,10 @@ namespace HomeWork_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Model DataModel
-        {
-            get;
-            set;
-        }
+        /// <summary>
+        /// Ссылка на Model
+        /// </summary>
+        private Model DataModel { get; set; }
         /// <summary>
         /// CollectionViewSource для департаментов
         /// </summary>
@@ -66,7 +65,7 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void AddDepartment_Click(object sender, RoutedEventArgs e)
         {
-            AddDepartmentWindow addDepartmentWindow = new AddDepartmentWindow(Repository.Departments);
+            AddDepartmentWindow addDepartmentWindow = new AddDepartmentWindow(this.DataModel);
             addDepartmentWindow.ShowDialog();
         }
         /// <summary>
@@ -76,9 +75,8 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void DelDepartment_Click(object sender, RoutedEventArgs e)
         {
-            DelDepartmentWindow delDepartmentWindow = new DelDepartmentWindow(Repository.Departments, Model.repository.Employees);
+            DelDepartmentWindow delDepartmentWindow = new DelDepartmentWindow(this.DataModel);
             delDepartmentWindow.ShowDialog();
-            WPFDataGrid.ItemsSource = Model.repository.Employees;
         }
         /// <summary>
         /// Выбран пункт меню "Редактировать отдел"
@@ -87,8 +85,12 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void EditDepartment_Click(object sender, RoutedEventArgs e)
         {
-            EditDepartmentWindow editDepartmentWindow = new EditDepartmentWindow(Repository.Departments);
-            editDepartmentWindow.ShowDialog();
+            EditDepartmentWindow editDepartmentWindow = new EditDepartmentWindow(this.DataModel);
+            if(editDepartmentWindow.ShowDialog() == true)
+            {
+                this.DataModel.SetDepartmentName();
+                treeView.Items.Refresh();
+            }
         }
 
         /// <summary>
@@ -98,10 +100,10 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void AddWorker_Click(object sender, RoutedEventArgs e)
         {
-            AddWorkerWindow addWorkerWindow = new AddWorkerWindow(Repository.Departments);
+            AddWorkerWindow addWorkerWindow = new AddWorkerWindow(this.DataModel);
             if (addWorkerWindow.ShowDialog() == true)
             {
-                Model.repository.Employees.Add(addWorkerWindow.GetWorker());
+                Model.repository.Employees.Add(this.DataModel.GetNewEmployee());
                 Salary.DataContext = this.DataModel.GetSelect();
             }
         }
@@ -113,16 +115,7 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void DelWorker_Click(object sender, RoutedEventArgs e)
         {
-            var select = WPFDataGrid.SelectedItem;
-            if (select == null)
-            {
-                MessageBox.Show("Сначала выделите сотрудника для удаления", "Удалить сотрудника");
-                return;
-            }
-            Employee worker = (Employee)select;
-            if (MessageBox.Show($"Удалить сотрудника {worker.FirstName} {worker.LastName}", "Удалить сотрудника", MessageBoxButton.YesNo) == MessageBoxResult.No)
-                return;
-            Model.repository.Employees.Remove(worker);
+            this.DataModel.DeleteEmployee(WPFDataGrid.SelectedItem);
         }
         
         /// <summary>
@@ -132,53 +125,7 @@ namespace HomeWork_WPF
         /// <param name="e"></param>
         private void EditWorker_Click(object sender, RoutedEventArgs e)
         {
-            var select = WPFDataGrid.SelectedItem;
-            if (select == null)
-            {
-                MessageBox.Show("Сначала выделите сотрудника для редактирования", "Редактировать сотрудника");
-                return;
-            }
-            Employee worker = (Employee)select;
-            EditWorkerWindow editWorkerWindow = new EditWorkerWindow(worker, Model.repository);
-            if (editWorkerWindow.ShowDialog() == true)
-            {
-                //// редактируем сотрудника
-                //Worker workerEdit = editWorkerWindow.GetWorker();
-                //for (int i = 0; i < l_Workers.Count; i++)
-                //{
-                //    if (workerEdit.Nomer == l_Workers[i].Nomer)
-                //    {
-                //        Workers.Remove(l_Workers[i]);
-                //        Workers.Add(workerEdit);
-                //        l_Workers.Remove(l_Workers[i]);
-                //        l_Workers.Add(workerEdit);
-                //        break;
-                //    }
-                //}
-
-                //// проверяем изменён ли отдел
-                //if (editWorkerWindow.ChangedDepartment)
-                //{
-                //    // увеличиваем количество сотрудников нового отдела
-                //    DepartmentStruct selectDS = editWorkerWindow.GetDepartment();
-                //    for (int i = 0; i < departments.Count; i++)
-                //    {
-                //        if (selectDS.DepartmentId == departments[i].DepartmentId)
-                //        {
-                //            departments[i].AddWorker();
-                //        }
-                //    }
-
-                //    // Уменьшаем количество сотрудников в бывшем отделе
-                //    for (int i = 0; i < departments.Count; i++)
-                //    {
-                //        if (editWorkerWindow.DepartmentOldId == departments[i].DepartmentId)
-                //        {
-                //            departments[i].DelWorker();
-                //        }
-                //    }
-                //}
-            }
+            this.DataModel.EditEmployee( WPFDataGrid.SelectedItem);            
         }
 
         /// <summary>
@@ -196,6 +143,18 @@ namespace HomeWork_WPF
             Model.repository.Sort(newName);
             myView = CollectionViewSource.GetDefaultView(Model.repository.Employees);
             WPFDataGrid.ItemsSource = myView;
+            myView.Filter = new Predicate<object>(this.DataModel.myFilter);
+        }
+
+        /// <summary>
+        /// Выбор нового сотрудника
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WPFDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+                this.DataModel.SelectEmployee(e.AddedItems[0]);
         }
     }
 }

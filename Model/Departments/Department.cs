@@ -8,22 +8,10 @@ using HomeWork_WPF.Employees;
 
 namespace HomeWork_WPF
 {
-    public class Department 
+    public class Department
     {
         // департаменты
         protected List<Department> departments;
-
-        public Department()
-        {
-            departments = new List<Department>();
-        }
-        public Department(string Name, uint DepartmentId, ObservableCollection<Department> Departments)
-        {
-            this.Name = Name;
-            this.DepartmentId = DepartmentId;
-            this.Departments = Departments;
-        }
-
         #region Свойства
         /// <summary>
         /// Наименование
@@ -41,7 +29,26 @@ namespace HomeWork_WPF
         public ObservableCollection<Department> Departments { get; set; }
 
         // руководитель
-        public Manager manager { get; set; }        
+        public Manager manager { get; set; }
         #endregion
+        /// <summary>
+        /// Конструктор без параметров
+        /// </summary>
+        public Department()
+        {
+            departments = new List<Department>();
+        }
+        /// <summary>
+        /// Конструктор с параметрами
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="DepartmentId"></param>
+        /// <param name="Departments"></param>
+        public Department(string Name, uint DepartmentId, ObservableCollection<Department> Departments)
+        {
+            this.Name = Name;
+            this.DepartmentId = DepartmentId;
+            this.Departments = Departments;
+        }
     }
 }

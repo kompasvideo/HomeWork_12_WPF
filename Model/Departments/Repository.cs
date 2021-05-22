@@ -306,13 +306,14 @@ namespace HomeWork_WPF
                 }
                 else
                 {
-                    if (dep.Departments != null)
+                    if (dep.Departments.Count > 0)
                     {
-                        return SearchDepartment(p_depId, dep.Departments);
+                        string str = SearchDepartment(p_depId, dep.Departments);
+                        if (str!= null) return str;
                     }
                 }
             }
-            return "";
+            return null;
         }
         /// <summary>
         /// Сортировка сотрудников

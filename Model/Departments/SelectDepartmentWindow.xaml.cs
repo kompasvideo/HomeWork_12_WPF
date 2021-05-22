@@ -20,16 +20,25 @@ namespace HomeWork_WPF.Departments
     /// </summary>
     public partial class SelectDepartmentWindow : Window
     {
-        ObservableCollection<Department> departments;
+        /// <summary>
+        /// Ссылка на Model
+        /// </summary>
+        private Model DataModel { get; set; }
 
-        // выбранный TreeViewItem 
-        Department select;
-
-        public SelectDepartmentWindow(ObservableCollection<Department> departments)
+        /// <summary>
+        /// Показывает выбран ли отдел 
+        /// </summary>
+        bool department;
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="DataModel"></param>
+        public SelectDepartmentWindow(Model DataModel)
         {
             InitializeComponent();
-            this.departments = departments;
-            treeView.ItemsSource = departments;
+            this.DataModel = DataModel;
+            treeView.ItemsSource = this.DataModel.GetDepartments();
+            department = false;
         }
 
         /// <summary>
@@ -39,7 +48,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            if (select.Name == null)
+            if (! department)
             {
                 MessageBox.Show("Выберите сначала отдел");
             }
@@ -64,16 +73,8 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            select = (Department)e.NewValue;
-        }
-
-        /// <summary>
-        /// Возвращяет отдел в виде структуры
-        /// </summary>
-        /// <returns></returns>
-        public Department GetDepartment()
-        {
-            return select;
+            this.DataModel.SetSelectDialog(e.NewValue);
+            department = true;
         }
     }
 }
