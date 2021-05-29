@@ -1,8 +1,19 @@
 ﻿using HomeWork_WPF.Departments;
-using System.Collections.ObjectModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
-namespace HomeWork_WPF.Employees
+namespace HomeWork_WPF.Views
 {
     /// <summary>
     /// Логика взаимодействия для AddWorkerWindow.xaml
@@ -23,12 +34,12 @@ namespace HomeWork_WPF.Employees
         /// </summary>
         bool vacancy;
 
-        public AddWorkerWindow(Model DataModel)
+        public AddWorkerWindow()
         {
             InitializeComponent();
             this.DataModel = DataModel;
-            grid1.DataContext = this.DataModel.GetNewEmployeeProvider();
-            lbEmployees.ItemsSource = this.DataModel.employeesList;
+            //grid1.DataContext = this.DataModel.GetNewEmployeeProvider();
+            //lbEmployees.ItemsSource = this.DataModel.employeesList;
             department = false;
             vacancy = false;
         }

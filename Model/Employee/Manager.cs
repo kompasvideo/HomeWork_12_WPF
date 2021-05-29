@@ -14,6 +14,11 @@ namespace HomeWork_WPF.Employees
             {
                 return Model.GetSalary(DepartmentId);
             }
+            set
+            {
+                salary = value;
+                OnPropertyChanged("Salary");
+            }
         }
         public Manager(string firstName, string lastName, int age, uint departmentId, string job = "Руководитель") : 
             base(firstName, lastName, age, departmentId, job)

@@ -109,6 +109,7 @@ namespace HomeWork_WPF
         public static int GetSalary(uint p_depId)
         {
             salary = 0;
+            if (Repository.Departments == null) return 0;
             foreach (var dep in Repository.Departments)
             {
                 if (dep.DepartmentId == p_depId)
@@ -488,6 +489,14 @@ namespace HomeWork_WPF
                 selectedEmployee.Age = employeeProvider.Age;
                 selectedEmployee.DepartmentId = employeeProvider.DepartmentId;
                 selectedEmployee.EEmployee = employeeProvider.EEmployee;
+            }
+        }
+        public IEnumerable<string> AvailableDevelopment
+        {
+            get
+            {
+                return (from developer in repository.Employees
+                        select developer.Job).Distinct();
             }
         }
     }

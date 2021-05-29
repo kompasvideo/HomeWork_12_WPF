@@ -19,6 +19,11 @@ namespace HomeWork_WPF.Employees
             {
                 return 12;
             }
+            set 
+            {
+                salary = value;
+                OnPropertyChanged("Salary");
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace HomeWork_WPF
         /// <summary>
         /// CollectionViewSource для департаментов
         /// </summary>
-        System.ComponentModel.ICollectionView myView;
+        System.ComponentModel.ICollectionView Source;
         /// <summary>
         /// Конструктор без параметров
         /// </summary>
@@ -38,9 +38,9 @@ namespace HomeWork_WPF
         {
             InitializeComponent();
             this.DataModel = new Model();
-            treeView.ItemsSource = this.DataModel.GetDepartments();
-            myView = CollectionViewSource.GetDefaultView(this.DataModel.GetEmployees());
-            WPFDataGrid.ItemsSource = myView;
+            treeView.ItemsSource = this.DataModel.GetDepartments();            
+            this.Source = CollectionViewSource.GetDefaultView(Model.repository.Employees);
+            WPFDataGrid.ItemsSource = this.Source;
             FIO.DataContext = this.DataModel.GetSelect();
             Salary.DataContext = this.DataModel.GetSelect();
         }
@@ -54,7 +54,7 @@ namespace HomeWork_WPF
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             this.DataModel.SetSelect(e.NewValue);
-            myView.Filter = new Predicate<object>(this.DataModel.myFilter);
+            Source.Filter = new Predicate<object>(this.DataModel.myFilter);
         }
         
         
@@ -91,22 +91,7 @@ namespace HomeWork_WPF
                 this.DataModel.SetDepartmentName();
                 treeView.Items.Refresh();
             }
-        }
-
-        /// <summary>
-        /// Выбран пункт меню "Добавить сотрудника"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AddWorker_Click(object sender, RoutedEventArgs e)
-        {
-            AddWorkerWindow addWorkerWindow = new AddWorkerWindow(this.DataModel);
-            if (addWorkerWindow.ShowDialog() == true)
-            {
-                Model.repository.Employees.Add(this.DataModel.GetNewEmployee());
-                Salary.DataContext = this.DataModel.GetSelect();
-            }
-        }
+        }        
         
         /// <summary>
         /// Выбран пункт меню "Удалить сотрудника"
@@ -141,9 +126,9 @@ namespace HomeWork_WPF
             // удаляеи из имени последний символ
             string newName = name.Substring(0, name.Length - 1);
             Model.repository.Sort(newName);
-            myView = CollectionViewSource.GetDefaultView(Model.repository.Employees);
-            WPFDataGrid.ItemsSource = myView;
-            myView.Filter = new Predicate<object>(this.DataModel.myFilter);
+            Source = CollectionViewSource.GetDefaultView(Model.repository.Employees);
+            WPFDataGrid.ItemsSource = Source;
+            Source.Filter = new Predicate<object>(this.DataModel.myFilter);
         }
 
         /// <summary>
@@ -155,6 +140,42 @@ namespace HomeWork_WPF
         {
             if (e.AddedItems.Count > 0)
                 this.DataModel.SelectEmployee(e.AddedItems[0]);
+        }
+        private void ListView_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader currentHeader = e.OriginalSource as GridViewColumnHeader;
+            if (currentHeader != null && currentHeader.Role != GridViewColumnHeaderRole.Padding)
+            {
+                //using (this.Source.DeferRefresh())
+                //{
+                //    Func<SortDescription, bool> lamda = item => item.PropertyName.Equals(currentHeader.Column.Header.ToString());
+                //    if (this.Source.SortDescriptions.Count(lamda) > 0)
+                //    {
+                //        SortDescription currentSortDescription = this.Source.SortDescriptions.First(lamda);
+                //        ListSortDirection sortDescription = currentSortDescription.Direction == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+
+
+                //        currentHeader.Column.HeaderTemplate = currentSortDescription.Direction == ListSortDirection.Ascending ?
+                //            this.Resources["HeaderTemplateArrowDown"] as DataTemplate : this.Resources["HeaderTemplateArrowUp"] as DataTemplate;
+
+                //        this.Source.SortDescriptions.Remove(currentSortDescription);
+                //        this.Source.SortDescriptions.Insert(0, new SortDescription(currentHeader.Column.Header.ToString(), sortDescription));
+                //    }
+                //    else
+                //        this.Source.SortDescriptions.Add(new SortDescription(currentHeader.Column.Header.ToString(), ListSortDirection.Ascending));
+                //}
+
+
+            }
+
+
+        }
+        public IEnumerable<string> DeveloperList
+        {
+            get
+            {
+                return this.DataModel.AvailableDevelopment;
+            }
         }
     }
 }

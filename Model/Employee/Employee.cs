@@ -35,7 +35,7 @@ namespace HomeWork_WPF
     {
         string firstName;
         string lastName;
-        int salary;
+        protected int salary;
         int age;
         uint departmentId;
         string job;
@@ -130,7 +130,7 @@ namespace HomeWork_WPF
         /// Обработчик события PropertyChanged
         /// </summary>
         /// <param name="info"></param>
-        private void OnPropertyChanged(string info)
+        protected void OnPropertyChanged(string info)
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(info));
