@@ -20,20 +20,14 @@ namespace HomeWork_WPF.Departments
     /// </summary>
     public partial class EditDepartmentWindow : Window
     {
-        private Model DataModel
-        {
-            get;
-            set;
-        }
         /// <summary>
         /// Конструктор с параметром
         /// </summary>
         /// <param name="departments"></param>
-        public EditDepartmentWindow(Model DataModel)
+        public EditDepartmentWindow()
         {
             InitializeComponent();
-            this.DataModel = DataModel;
-            treeView.ItemsSource = this.DataModel.GetDepartments();
+            treeView.ItemsSource = ((App)Application.Current).DataModel.GetDepartments();
         }
 
         /// <summary>
@@ -43,8 +37,8 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            this.DataModel.SetSelectDialog(e.NewValue);
-            tbNewName.DataContext = this.DataModel.GetDepartmentName();
+            Model.SetSelectDialog(e.NewValue);
+            tbNewName.DataContext = Model.GetDepartmentName();
         }
 
         /// <summary>

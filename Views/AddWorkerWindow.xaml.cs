@@ -1,10 +1,13 @@
 ﻿using HomeWork_WPF.Departments;
+using HomeWork_WPF.Employees;
+using HomeWork_WPF.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -21,11 +24,6 @@ namespace HomeWork_WPF.Views
     public partial class AddWorkerWindow : Window
     {
         /// <summary>
-        /// Ссылка на Model
-        /// </summary>
-        private Model DataModel { get; set; }
-
-        /// <summary>
         /// Показывает выбран ли отдел 
         /// </summary>
         bool department;
@@ -37,9 +35,8 @@ namespace HomeWork_WPF.Views
         public AddWorkerWindow()
         {
             InitializeComponent();
-            this.DataModel = DataModel;
             //grid1.DataContext = this.DataModel.GetNewEmployeeProvider();
-            //lbEmployees.ItemsSource = this.DataModel.employeesList;
+            //lbEmployees.ItemsSource = Model.employeesList;
             department = false;
             vacancy = false;
         }
@@ -82,7 +79,7 @@ namespace HomeWork_WPF.Views
         /// <param name="e"></param>
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow(this.DataModel);
+            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow();
             if (selectDepartmentWindow.ShowDialog() == true)
             {
                 department = true;
@@ -96,8 +93,18 @@ namespace HomeWork_WPF.Views
         /// <param name="e"></param>
         private void lbEmployees_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            vacancy = true;
-            this.DataModel.SetNewVacancy(e.AddedItems[0]);
+            var peer = UIElementAutomationPeer.FromElement(sender as ComboBox);
+            if (peer != null)
+            {
+                peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+            }
+            //vacancy = true;
+            //Model.SetNewVacancy(e.AddedItems[0]);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            DataContext = new EmployeeProvider( new Worker("Имя", "Фамилия",25,0, "Рабочий"));
         }
     }
 }

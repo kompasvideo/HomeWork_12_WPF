@@ -20,20 +20,14 @@ namespace HomeWork_WPF.Departments
     /// </summary>
     public partial class AddDepartmentWindow : Window
     {
-        private Model DataModel
-        {
-            get;
-            set;
-        }
         /// <summary>
         /// Конструктор с параметрами
         /// </summary>
         /// <param name="DataModel"></param>
-        public AddDepartmentWindow(Model DataModel)
+        public AddDepartmentWindow()
         {
             InitializeComponent();
-            this.DataModel = DataModel;
-            treeView.ItemsSource = this.DataModel.GetDepartments();
+            treeView.ItemsSource = ((App)Application.Current).DataModel.GetDepartments();
         }
 
         /// <summary>
@@ -43,7 +37,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            this.DataModel.AddDepartment(tbNewName.Text);
+            ((App)Application.Current).DataModel.AddDepartment(tbNewName.Text);
             this.Close();
         }
 
@@ -65,7 +59,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            this.DataModel.SetSelectDialog(e.NewValue);
+            Model.SetSelectDialog(e.NewValue);
         }
     }
 }

@@ -21,11 +21,6 @@ namespace HomeWork_WPF.Departments
     public partial class SelectDepartmentWindow : Window
     {
         /// <summary>
-        /// Ссылка на Model
-        /// </summary>
-        private Model DataModel { get; set; }
-
-        /// <summary>
         /// Показывает выбран ли отдел 
         /// </summary>
         bool department;
@@ -33,11 +28,10 @@ namespace HomeWork_WPF.Departments
         /// Конструктор
         /// </summary>
         /// <param name="DataModel"></param>
-        public SelectDepartmentWindow(Model DataModel)
+        public SelectDepartmentWindow()
         {
             InitializeComponent();
-            this.DataModel = DataModel;
-            treeView.ItemsSource = this.DataModel.GetDepartments();
+            treeView.ItemsSource = ((App)Application.Current).DataModel.GetDepartments();
             department = false;
         }
 
@@ -73,7 +67,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            this.DataModel.SetSelectDialog(e.NewValue);
+            Model.SetSelectDialog(e.NewValue);
             department = true;
         }
     }

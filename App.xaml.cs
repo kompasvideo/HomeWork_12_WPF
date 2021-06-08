@@ -13,5 +13,14 @@ namespace HomeWork_WPF
     /// </summary>
     public partial class App : Application
     {
+        public Model DataModel { get; set;}
+        private void AppStartup(object sender, StartupEventArgs args)
+        {
+            //LoadModel();
+        }
+        void LoadModel()
+        {
+            //this.DataModel = new Model();
+        }
     }
 }

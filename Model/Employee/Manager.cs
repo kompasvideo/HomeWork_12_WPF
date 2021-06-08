@@ -12,7 +12,7 @@ namespace HomeWork_WPF.Employees
         { 
             get
             {
-                return Model.GetSalary(DepartmentId);
+                return 0; //Model.GetSalary(DepartmentId);
             }
             set
             {
@@ -23,7 +23,7 @@ namespace HomeWork_WPF.Employees
         public Manager(string firstName, string lastName, int age, uint departmentId, string job = "Руководитель") : 
             base(firstName, lastName, age, departmentId, job)
         {
-            EEmployee = EnEmployee.Manager;
+            EEmployee = EnEmployee.Руководитель;
         }
     }
 }

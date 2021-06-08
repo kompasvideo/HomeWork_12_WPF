@@ -3,10 +3,51 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:HomeWork_WPF.Views"
+        xmlns:local="clr-namespace:HomeWork_WPF.Views" 
+        xmlns:main="clr-namespace:HomeWork_WPF" 
+        xmlns:viewmodels="clr-namespace:HomeWork_WPF.ViewModels" 
+        xmlns:providers="clr-namespace:HomeWork_WPF.Providers" 
+        d:DataContext="{d:DesignInstance Type=providers:EmployeeProvider}"
         mc:Ignorable="d"
-        Title="AddWorkerWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Добавить сотрудника" Height="260" Width="410" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid x:Name="grid1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="1" Grid.Column="0" Content="Фамилия: " HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="1" Grid.Column="1"  x:Name="tbLastName" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Width="140" HorizontalAlignment="Left" Margin="0,4"/>
+        <Label Grid.Row="2" Grid.Column="0" Content="Имя: " HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="tbFirstName" Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Width="140"  HorizontalAlignment="Left" Margin="0,4"/>
+        <Label Grid.Row="3" Grid.Column="0" Content="Возраст: " HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="tbAge" Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" Width="140"  HorizontalAlignment="Left" Margin="0,4"/>
+        <Label Grid.Row="4" Grid.Column="0" Content="Отдел: " HorizontalAlignment="Right"/>
+        <Button  Grid.Row="4" Grid.Column="1" x:Name="bEdit" Content="Выбрать отдел" Width="140" Height="18" HorizontalAlignment="Left" Click="Select_Click"/>
+        <Label Grid.Row="5" Grid.Column="0" Content="Должность: " HorizontalAlignment="Right"/>
+        <ComboBox Grid.Row="5" Grid.Column="1" x:Name="lbEmployees" Width="140"  HorizontalAlignment="Left" Margin="0,2" SelectionChanged="lbEmployees_SelectionChanged"
+                  SelectedValue="{Binding Path=EEmployee}">
+            <main:EnEmployee>Рабочий</main:EnEmployee>
+            <main:EnEmployee>Интерн</main:EnEmployee>
+            <main:EnEmployee>Руководитель</main:EnEmployee>
+        </ComboBox>
+        <Button Grid.Row="7" Grid.Column="0" x:Name="bOK" Content="OK" Width="80" Height="20" HorizontalAlignment="Right" Margin="0,0,40,0" IsDefault="True" Command="{Binding bOK_Click}">
+            <Button.DataContext>
+                <viewmodels:AddWorkerViewModel/>
+            </Button.DataContext>
+        </Button>
+        <Button Grid.Row="7" Grid.Column="1" x:Name="bCancel" Content="Отмена" Width="80" Height="20" HorizontalAlignment="Left" Margin="40,0,0,0" IsCancel="True" Command="{Binding bCancel_Click}">
+            <Button.DataContext>
+                <viewmodels:AddWorkerViewModel/>
+            </Button.DataContext>
+        </Button>
     </Grid>
 </Window>

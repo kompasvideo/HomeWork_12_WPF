@@ -21,20 +21,14 @@ namespace HomeWork_WPF.Departments
     /// </summary>
     public partial class DelDepartmentWindow : Window
     {
-        private Model DataModel
-        {
-            get;
-            set;
-        }
         /// <summary>
         /// Конструктор с параметром
         /// </summary>
         /// <param name="DataModel"></param>
-        public DelDepartmentWindow(Model DataModel)
+        public DelDepartmentWindow()
         {
             InitializeComponent();
-            this.DataModel = DataModel;
-            treeView.ItemsSource = this.DataModel.GetDepartments();
+            treeView.ItemsSource = ((App)Application.Current).DataModel.GetDepartments();
         }
 
         /// <summary>
@@ -44,7 +38,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            this.DataModel.DeleteDepartmentAndWorkers(this.DataModel.GetSelectDialog());
+            ((App)Application.Current).DataModel.DeleteDepartmentAndWorkers(Model.GetSelectDialog());
             this.Close();
         }
 
@@ -65,7 +59,7 @@ namespace HomeWork_WPF.Departments
         /// <param name="e"></param>
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            this.DataModel.SetSelectDialog(e.NewValue);
+            Model.SetSelectDialog(e.NewValue);
         }
     }
 }

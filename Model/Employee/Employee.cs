@@ -10,12 +10,12 @@ namespace HomeWork_WPF
     /// <summary>
     /// Объединение, позволяет получить тип класса из Employee
     /// </summary>
-    public enum EnEmployee: int
+    public enum EnEmployee
     {
         Employee,
-        Worker,
-        Intern,
-        Manager
+        Руководитель,
+        Рабочий,
+        Интерн
     }
 
     /// <summary>
@@ -120,7 +120,7 @@ namespace HomeWork_WPF
             DepartmentId = departmentId;
             Job = job;
             eEmployee = EnEmployee.Employee;
-        }
+        }        
 
         /// <summary>
         /// Событие PropertyChanged
@@ -207,9 +207,9 @@ namespace HomeWork_WPF
             {
                 Employee X = (Employee)x;
                 Employee Y = (Employee)y;
-                string x_str = Repository.GetNameDepartment(X.DepartmentId);
-                string y_str = Repository.GetNameDepartment(Y.DepartmentId);
-                return String.Compare(x_str, y_str);
+                if (X.DepartmentId == Y.DepartmentId) return 0;
+                else if (X.DepartmentId > Y.DepartmentId) return 0;
+                else return -1;
             }
         }
         /// <summary>

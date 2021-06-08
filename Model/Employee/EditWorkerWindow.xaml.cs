@@ -20,12 +20,7 @@ namespace HomeWork_WPF.Employees
     /// Логика взаимодействия для EditWorkerWindow.xaml
     /// </summary>
     public partial class EditWorkerWindow : Window
-    {
-        /// <summary>
-        /// Ссылка на Model
-        /// </summary>
-        private Model DataModel { get; set; }
-
+    {        
         /// <summary>
         /// Показывает выбрана ли должность
         /// </summary>
@@ -42,13 +37,12 @@ namespace HomeWork_WPF.Employees
         /// Конструктор
         /// </summary>
         /// <param name="worker"></param>
-        public EditWorkerWindow(Model DataModel)
+        public EditWorkerWindow()
         {
             InitializeComponent();
-            this.DataModel = DataModel;
-            grid1.DataContext = this.DataModel.GetSelectEmployeeProvider();
-            lbEmployees.ItemsSource = this.DataModel.employeesList;
-            lbEmployees.SelectedIndex = this.DataModel.GetEmployeeVacancy();
+            grid1.DataContext = Model.GetSelectEmployeeProvider();
+            lbEmployees.ItemsSource = Model.employeesList;
+            lbEmployees.SelectedIndex = Model.GetEmployeeVacancy();
             vacancy = false;
         }
 
@@ -60,7 +54,7 @@ namespace HomeWork_WPF.Employees
         /// <param name="e"></param>
         private void bOK_Click(object sender, RoutedEventArgs e)
         {
-            this.DataModel.SelectEmployeeEdit(vacancy);
+            ((App)Application.Current).DataModel.SelectEmployeeEdit(vacancy);
             DialogResult = true;
             this.Close();
         }
@@ -82,7 +76,7 @@ namespace HomeWork_WPF.Employees
         /// <param name="e"></param>
         private void Select_Click(object sender, RoutedEventArgs e)
         {
-            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow(this.DataModel);
+            SelectDepartmentWindow selectDepartmentWindow = new SelectDepartmentWindow();
             selectDepartmentWindow.ShowDialog();
         }
 
@@ -94,7 +88,7 @@ namespace HomeWork_WPF.Employees
         private void lbEmployees_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             vacancy = true;
-            this.DataModel.SetNewVacancy(e.AddedItems[0]);
+            Model.SetNewVacancy(e.AddedItems[0]);
         }
     }
 }

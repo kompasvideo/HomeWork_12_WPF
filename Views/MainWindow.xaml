@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeWork_WPF"
-        xmlns:viewmodels="clr-namespace:HomeWork_WPF.ViewModels"
+        xmlns:viewmodels="clr-namespace:HomeWork_WPF.ViewModels" 
         mc:Ignorable="d"
         x:Name="mainWin"
         Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <!--    d:DataContext="{d:DesignInstance Type=local:Model}"-->
+
     <Window.Resources>
         <local:SalaryConverter x:Key="mySalaryConverter"/>
         <local:DGSalaryConverter x:Key="dgSalaryConverter"/>
@@ -20,12 +22,18 @@
             <Setter Property="Visibility" Value="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource convVis}, ConverterParameter=True}" />
         </Style>
     </Window.Resources>
+    <!--
     <Window.DataContext>
         <viewmodels:MainViewModel/>
-    </Window.DataContext>
+    </Window.DataContext> -->
     <DockPanel>
         <WrapPanel DockPanel.Dock="Top">
             <Menu x:Name="menu" Height="22" VerticalAlignment="Top">
+                <!--
+                <Menu.DataContext>
+                    <viewmodels:MainViewModel/>
+                </Menu.DataContext>
+                -->
                 <MenuItem Header="Отдел">
                     <MenuItem x:Name="AddDepartment" Header="Добавить" Click="AddDepartment_Click"/>
                     <MenuItem x:Name="DelDepartment" Header="Удалить" Click="DelDepartment_Click"/>
@@ -47,9 +55,12 @@
                 </MenuItem>
             </Menu>
         </WrapPanel>
-        <TreeView x:Name="treeView" DockPanel.Dock="Left" Width="240" SelectedItemChanged="treeView_SelectedItemChanged" Margin="5">
+        <TreeView x:Name="treeView" DockPanel.Dock="Left" Width="240" SelectedItemChanged="treeView_SelectedItemChanged" Margin="5"
+                  ItemsSource="{Binding Departments}"
+                  >
+            <!-- ItemsSource="{Binding Source={x:Static Application.Current}, Path=DataModel.Departments}" -->
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Path=Departments}">
+                <HierarchicalDataTemplate ItemsSource="{Binding Departments}">
                     <TextBlock Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
@@ -58,7 +69,7 @@
             <Label x:Name="FIO" Content='{Binding manager, Converter={StaticResource myFIOConverter}}'/>
             <Label x:Name="Salary"  Content='{Binding manager.Salary, Converter={StaticResource mySalaryConverter}}'/>
         </StackPanel>
-        <ListView ItemsSource="{Binding}" x:Name="WPFDataGrid" GridViewColumnHeader.Click="ListView_Click" IsSynchronizedWithCurrentItem="True" Grid.Row="1">
+        <ListView ItemsSource="{Binding}" x:Name="WPFDataGrid" GridViewColumnHeader.Click="ListView_Click" IsSynchronizedWithCurrentItem="True" Grid.Row="1" SelectedItem="{Binding SelectedEmployee}">
         <ListView.GroupStyle>
             <GroupStyle>
                 <GroupStyle.HeaderTemplate>

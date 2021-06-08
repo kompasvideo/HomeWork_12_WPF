@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HomeWork_WPF.Providers
 {
-    class EmployeeProvider : INotifyPropertyChanged
+    public class EmployeeProvider : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -66,15 +66,19 @@ namespace HomeWork_WPF.Providers
         public uint DepartmentId 
         { 
             get { return employee.DepartmentId; }
-            set { employee.DepartmentId = value; }
-        }
-        public string DepartmentName
-        {
-            get 
-            {
-                return Repository.GetNameDepartment(DepartmentId);
+            set 
+            { 
+                employee.DepartmentId = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.DepartmentId)));
             }
         }
+        //public string DepartmentName
+        //{
+        //    get 
+        //    {
+        //        return repository.GetNameDepartment(DepartmentId);
+        //    }
+        //}
         /// <summary>
         /// Конструктор
         /// </summary>
