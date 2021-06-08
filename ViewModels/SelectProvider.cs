@@ -10,12 +10,16 @@ using HomeWork_WPF.Employees;
 
 namespace HomeWork_WPF
 {
-    class SelectProvider : ViewModelBase
+    public class SelectProvider : ViewModelBase
     {
         public Manager manager { get; set; }
         public SelectProvider(Manager manager)
         {
             this.manager = manager;
+        }
+        public SelectProvider()
+        {
+            
         }
     }
 }
