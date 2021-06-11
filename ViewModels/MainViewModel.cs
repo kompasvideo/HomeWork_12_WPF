@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using HomeWork_WPF.Employees;
+using HomeWork_WPF.Interface;
 using HomeWork_WPF.Views;
 using Newtonsoft.Json;
 using System;
@@ -237,8 +238,8 @@ namespace HomeWork_WPF.ViewModels
                 {
                     if (SelectDepartment == null)
                         SelectDepartment = Departments[0];
-                    AddWorkerWindow addWorkerWindow = new AddWorkerWindow(SelectDepartment);
-                    addWorkerWindow.ShowDialog();
+                    IAddWorker addWorkerWindow = new AddWorkerWindow();
+                    addWorkerWindow.Show(SelectDepartment);
                 });
                 return a; 
             }
@@ -311,9 +312,9 @@ namespace HomeWork_WPF.ViewModels
                 {
                     if (SelectDepartment == null)
                         SelectDepartment = Departments[0];
-                    AddDepartmentWindow addDepartmentWindow = new AddDepartmentWindow(SelectDepartment, 
+                    IAddDepartment addDepartmentWindow = new AddDepartmentWindow();
+                    addDepartmentWindow.Show(SelectDepartment,
                         GetNextDepartmentId(Departments) + 1);
-                    addDepartmentWindow.ShowDialog();
                 });
                 return a;
             }
