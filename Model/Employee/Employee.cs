@@ -13,9 +13,9 @@ namespace HomeWork_WPF
     public enum EnEmployee
     {
         Employee,
-        Руководитель,
         Рабочий,
-        Интерн
+        Интерн,
+        Руководитель
     }
 
     /// <summary>

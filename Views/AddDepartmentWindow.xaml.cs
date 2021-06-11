@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,20 +12,20 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using HomeWork_WPF.Employees;
 using HomeWork_WPF.ViewModels;
 
 namespace HomeWork_WPF.Views
 {
     /// <summary>
-    /// Логика взаимодействия для AddWorkerWindow.xaml
+    /// Логика взаимодействия для AddDepartmentWindow.xaml
     /// </summary>
-    public partial class AddWorkerWindow : Window
+    public partial class AddDepartmentWindow : Window
     {
-        public AddWorkerWindow(Department selectDepartment)
+        public AddDepartmentWindow(Department selectDepartment, uint id)
         {
             InitializeComponent();
-            DataContext = new AddWorkerViewModel(new Worker("Имя", "Фамилия", 25, 0, "Рабочий"), selectDepartment);
+            DataContext = new AddDepartmentViewModel(new Department("Департамент", id,
+                new ObservableCollection<Department>()), selectDepartment);
         }
     }
 }

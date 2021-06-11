@@ -4,12 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeWork_WPF"
-        xmlns:viewmodels="clr-namespace:HomeWork_WPF.ViewModels" 
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:viewmodels="clr-namespace:HomeWork_WPF.ViewModels"
         mc:Ignorable="d"
         x:Name="mainWin"
-        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <!--    d:DataContext="{d:DesignInstance Type=local:Model}"-->
-
+        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded">
     <Window.Resources>
         <local:SalaryConverter x:Key="mySalaryConverter"/>
         <local:DGSalaryConverter x:Key="dgSalaryConverter"/>
@@ -21,64 +21,70 @@
         <Style x:Key="ListViewSelected" TargetType="{x:Type FrameworkElement}">
             <Setter Property="Visibility" Value="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource convVis}, ConverterParameter=True}" />
         </Style>
+        <Style x:Key="TreeViewUnSelected" TargetType="{x:Type TextBlock}">
+            <Setter Property="Visibility" Value="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeViewItem}}, Converter={StaticResource convVis}, ConverterParameter=False}" />
+        </Style>
+        <Style x:Key="TreeViewSelected" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Visibility" Value="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeViewItem}}, Converter={StaticResource convVis}, ConverterParameter=True}" />
+        </Style>
+        <viewmodels:MainViewModel x:Key="main"/>
+        <CollectionViewSource Source="{Binding Source={StaticResource main}, Path=Employees}" x:Key="Cvs"/>
     </Window.Resources>
-    <!--
-    <Window.DataContext>
-        <viewmodels:MainViewModel/>
-    </Window.DataContext> -->
     <DockPanel>
         <WrapPanel DockPanel.Dock="Top">
             <Menu x:Name="menu" Height="22" VerticalAlignment="Top">
-                <!--
-                <Menu.DataContext>
-                    <viewmodels:MainViewModel/>
-                </Menu.DataContext>
-                -->
                 <MenuItem Header="Отдел">
-                    <MenuItem x:Name="AddDepartment" Header="Добавить" Click="AddDepartment_Click"/>
-                    <MenuItem x:Name="DelDepartment" Header="Удалить" Click="DelDepartment_Click"/>
-                    <MenuItem x:Name="EditDepartment" Header="Редактировать" Click="EditDepartment_Click"/>
+                    <MenuItem Header="Добавить" Command="{Binding Source={StaticResource main}, Path=AddDepartment_Click}"/>
+                    <MenuItem Header="Удалить" Command="{Binding Source={StaticResource main}, Path=DelDepartment_Click}"/>
                 </MenuItem>
                 <MenuItem Header="Сотрудник">
-                    <MenuItem x:Name="AddWorker" Header="Добавить" Command="{Binding AddWorker_Click}"/>
-                    <MenuItem x:Name="DelWorker" Header="Удалить" Click="DelWorker_Click" />
-                    <!--
-                    <MenuItem x:Name="EditWorker" Header="Редактировать" Click="EditWorker_Click" />
-                    -->
+                    <MenuItem Header="Добавить" Command="{Binding Source={StaticResource main}, Path=AddWorker_Click}"/>
+                    <MenuItem Header="Удалить" Command="{Binding Source={StaticResource main}, Path=DelWorker_Click}"/>
                 </MenuItem>
                 <MenuItem Header="Сортировать">
-                    <MenuItem x:Name="LastName1" Header="Фамилия" Click="Sort_Click"/>
-                    <MenuItem x:Name="FirstName1" Header="Имя" Click="Sort_Click"/>
-                    <MenuItem x:Name="Employee1" Header="Должность" Click="Sort_Click"/>
-                    <MenuItem x:Name="Age1" Header="Возраст" Click="Sort_Click"/>
-                    <MenuItem x:Name="Salary1" Header="Оклад" Click="Sort_Click"/>
+                    <MenuItem Header="Фамилия" Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="LastName"/>
+                    <MenuItem Header="Имя" Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="FirstName"/>
+                    <MenuItem Header="Должность" Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="Employee"/>
+                    <MenuItem Header="Возраст" Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="Age"/>
+                    <MenuItem Header="Оклад" Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="Salary"/>
                 </MenuItem>
             </Menu>
         </WrapPanel>
-        <TreeView x:Name="treeView" DockPanel.Dock="Left" Width="240" SelectedItemChanged="treeView_SelectedItemChanged" Margin="5"
-                  ItemsSource="{Binding Departments}"
-                  >
-            <!-- ItemsSource="{Binding Source={x:Static Application.Current}, Path=DataModel.Departments}" -->
+        <TreeView x:Name="treeView" DockPanel.Dock="Left" Width="240"  Margin="5"
+                  ItemsSource="{Binding Source={StaticResource main}, Path=Departments}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Departments}">
-                    <TextBlock Text="{Binding Name}" />
+                    <Grid>
+                        <TextBlock Text="{Binding Name}" Style="{StaticResource TreeViewUnSelected}"/>
+                        <TextBox Text="{Binding Name}" Style="{StaticResource TreeViewSelected}"/>
+                    </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding Source={StaticResource main}, Path=SelectedItemChangedCommand, UpdateSourceTrigger=PropertyChanged}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TreeView}}, Path=SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TreeView>
-        <StackPanel DockPanel.Dock="Top" Height="50" DataContext="SelectProvider">
-            <Label x:Name="FIO" Content='{Binding manager, Converter={StaticResource myFIOConverter}}'/>
-            <Label x:Name="Salary"  Content='{Binding manager.Salary, Converter={StaticResource mySalaryConverter}}'/>
+        <StackPanel DockPanel.Dock="Top" Height="50" >
+            <TextBlock x:Name="FIO" Text='{Binding Source={StaticResource main}, Path=SelectedManager, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,Converter={StaticResource myFIOConverter}}' />
+            <TextBlock x:Name="Salary" Text='{Binding Source={StaticResource main}, Path=SelectedManager.Salary, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Converter={StaticResource mySalaryConverter}}'/>
         </StackPanel>
-        <ListView ItemsSource="{Binding}" x:Name="WPFDataGrid" GridViewColumnHeader.Click="ListView_Click" IsSynchronizedWithCurrentItem="True" Grid.Row="1" SelectedItem="{Binding SelectedEmployee}">
-        <ListView.GroupStyle>
-            <GroupStyle>
-                <GroupStyle.HeaderTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" />
-                    </DataTemplate>
-                </GroupStyle.HeaderTemplate>
-            </GroupStyle>
-        </ListView.GroupStyle>
+        <ListView x:Name="WPFDataGrid" IsSynchronizedWithCurrentItem="True" Grid.Row="1" 
+                  ItemsSource="{Binding Source={StaticResource Cvs}}" SelectedItem="{Binding SelectedEmployee}" Loaded="WPFDataGrid_Loaded" >
+            <ListView.DataContext>
+                <Binding Source="{StaticResource main}"/>
+            </ListView.DataContext>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
             <ListView.View>
                 <GridView AllowsColumnReorder="True">
                     <GridViewColumn Header="Фамилия">
@@ -106,7 +112,7 @@
                             <DataTemplate>
                                 <Grid>
                                     <TextBlock Text="{Binding Path=Job}" Style="{StaticResource ListViewUnSelected}" />
-                                    <ComboBox SelectedItem="{Binding Path=Job}" ItemsSource="{Binding ElementName=mainWin, Path=DeveloperList}" Style="{StaticResource ListViewSelected}" />
+                                    <ComboBox SelectedItem="{Binding Path=Job}" ItemsSource="{Binding Source={StaticResource main},Path=DeveloperList}" Style="{StaticResource ListViewSelected}" />
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

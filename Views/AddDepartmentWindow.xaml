@@ -1,0 +1,23 @@
+﻿<Window x:Class="HomeWork_WPF.Views.AddDepartmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeWork_WPF.Views"
+        xmlns:viewmodels="clr-namespace:HomeWork_WPF.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:AddDepartmentViewModel}"
+        mc:Ignorable="d"
+        Title="Добавить отдел" Height="125" Width="350" WindowStartupLocation="CenterScreen">
+    <StackPanel>
+        <WrapPanel>
+            <Label Content="Введите имя нового отдела: " Margin="10,10,0,0"/>
+            <TextBox Width="150" Height="20" Margin="0,10,0,0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        </WrapPanel>
+        <WrapPanel>
+            <Button x:Name="bOK" Content="OK" Width="80" Height="20" Margin="50,15,40,0" 
+                    IsDefault="True" Command="{Binding bOK_Click}"/>
+            <Button x:Name="bCancel" Content="Отмена" Width="80" Height="20" Margin="40,15,0,0" 
+                    IsCancel="True" Command="{Binding bCancel_Click}"/>
+        </WrapPanel>
+    </StackPanel>
+</Window>
