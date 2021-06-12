@@ -87,7 +87,10 @@
             </ListView.GroupStyle>
             <ListView.View>
                 <GridView AllowsColumnReorder="True">
-                    <GridViewColumn Header="Фамилия">
+                    <GridViewColumn>
+                        <GridViewColumnHeader Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="LastName">
+                            Фамилия
+                        </GridViewColumnHeader>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -97,7 +100,10 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Имя">
+                    <GridViewColumn>
+                        <GridViewColumnHeader Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="FirstName">
+                            Имя
+                        </GridViewColumnHeader>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -107,7 +113,10 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Должность">
+                    <GridViewColumn>
+                        <GridViewColumnHeader Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="Employee">
+                            Должность
+                        </GridViewColumnHeader>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -117,7 +126,10 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Возраст">
+                    <GridViewColumn>
+                        <GridViewColumnHeader Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="Age">
+                            Возраст
+                        </GridViewColumnHeader>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -127,7 +139,10 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Оклад">
+                    <GridViewColumn>
+                        <GridViewColumnHeader Command="{Binding Source={StaticResource main}, Path=Sort_Click}" CommandParameter="Salary">
+                            Оклад
+                        </GridViewColumnHeader>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
