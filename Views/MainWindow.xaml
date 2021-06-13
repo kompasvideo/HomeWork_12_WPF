@@ -146,8 +146,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="{Binding Path=Salary, Converter={StaticResource dgSalaryConverter}}" Style="{StaticResource ListViewUnSelected}"/>
-                                    <TextBox Text="{Binding Path=Salary, Converter={StaticResource dgSalaryConverter}}" Style="{StaticResource ListViewSelected}"/>
+                                    <TextBlock Text="{Binding Path=Salary, Converter={StaticResource dgSalaryConverter}}"/>
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

@@ -82,15 +82,15 @@ namespace HomeWork_WPF.ViewModels
                         {
                             switch (employee.EEmployee)
                             {
-                                case EnEmployee.Руководитель:
+                                case EnEmployee.Manager:
                                     l_employee = new Manager(FirstName, LastName, Age, SelectDepartment.DepartmentId);
                                     Messenger.Default.Send(l_employee);
                                     break;
-                                case EnEmployee.Рабочий:
+                                case EnEmployee.Worker:
                                     l_employee = new Worker(FirstName, LastName, Age, SelectDepartment.DepartmentId);
                                     Messenger.Default.Send(l_employee);
                                     break;
-                                case EnEmployee.Интерн:
+                                case EnEmployee.Intern:
                                     l_employee = new Intern(FirstName, LastName, Age, SelectDepartment.DepartmentId);
                                     Messenger.Default.Send(l_employee);
                                     break;

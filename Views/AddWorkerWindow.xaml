@@ -34,9 +34,9 @@
         <Label Grid.Row="4" Grid.Column="0" Content="Должность: " HorizontalAlignment="Right"/>
         <ComboBox Grid.Row="4" Grid.Column="1" x:Name="lbEmployees" Width="140"  HorizontalAlignment="Left" Margin="0,2"
                   SelectedValue="{Binding Path=EEmployee, UpdateSourceTrigger=PropertyChanged}">
-            <main:EnEmployee>Рабочий</main:EnEmployee>
-            <main:EnEmployee>Интерн</main:EnEmployee>
-            <main:EnEmployee>Руководитель</main:EnEmployee>
+            <main:EnEmployee>Worker</main:EnEmployee>
+            <main:EnEmployee>Intern</main:EnEmployee>
+            <main:EnEmployee>Manager</main:EnEmployee>
         </ComboBox>
         <Button Grid.Row="5" Grid.Column="0" Content="OK" Width="80" Height="20" 
                 HorizontalAlignment="Right" Margin="0,0,40,0" IsDefault="True" Command="{Binding bOK_Click}"/>

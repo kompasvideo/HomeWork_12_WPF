@@ -11,7 +11,7 @@ namespace HomeWork_WPF
     public class Department
     {
         // департаменты
-        protected List<Department> departments;
+        protected List<Department> departments = new List<Department>();
         #region Свойства
         /// <summary>
         /// Наименование
@@ -31,13 +31,6 @@ namespace HomeWork_WPF
         // руководитель
         public Manager manager { get; set; }
         #endregion
-        /// <summary>
-        /// Конструктор без параметров
-        /// </summary>
-        public Department()
-        {
-            departments = new List<Department>();
-        }
         /// <summary>
         /// Конструктор с параметрами
         /// </summary>

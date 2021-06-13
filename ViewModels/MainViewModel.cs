@@ -73,15 +73,15 @@ namespace HomeWork_WPF.ViewModels
             {
                 switch (emp.EEmployee)
                 {
-                    case EnEmployee.Интерн:
+                    case EnEmployee.Intern:
                         Intern intern = new Intern(emp.FirstName, emp.LastName, emp.Age, emp.DepartmentId);
                         Employees.Add(intern);
                         break;
-                    case EnEmployee.Рабочий:
+                    case EnEmployee.Worker:
                         Worker worker = new Worker(emp.FirstName, emp.LastName, emp.Age, emp.DepartmentId);
                         Employees.Add(worker);
                         break;
-                    case EnEmployee.Руководитель:
+                    case EnEmployee.Manager:
                         Manager manager = new Manager(emp.FirstName, emp.LastName, emp.Age, emp.DepartmentId);
                         Employees.Add(manager);
                         break;
@@ -151,13 +151,13 @@ namespace HomeWork_WPF.ViewModels
                 {
                     switch (e.EEmployee)
                     {
-                        case EnEmployee.Интерн:
+                        case EnEmployee.Intern:
                             salary += e.Salary;
                             break;
-                        case EnEmployee.Рабочий:
+                        case EnEmployee.Worker:
                             salary += e.Salary * 8 * 23;
                             break;
-                        case EnEmployee.Руководитель:
+                        case EnEmployee.Manager:
                             manager.Add(e);
                             break;
                     }

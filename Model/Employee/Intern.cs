@@ -11,19 +11,14 @@ namespace HomeWork_WPF.Employees
         public Intern(string firstName, string lastName, int age, uint departmentId, string job = "Интерн") :
             base(firstName, lastName, age, departmentId, job)
         {
-            EEmployee = EnEmployee.Интерн;
+            EEmployee = EnEmployee.Intern;
         }
         public override int Salary
         {
             get
             {
                 return 500;
-            }
-            set
-            {
-                salary = value;
-                OnPropertyChanged("Salary");
-            }
+            }            
         }
     }
 }

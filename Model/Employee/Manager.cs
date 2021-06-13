@@ -11,7 +11,7 @@ namespace HomeWork_WPF.Employees
         public Manager(string firstName, string lastName, int age, uint departmentId, string job = "Руководитель") : 
             base(firstName, lastName, age, departmentId, job)
         {
-            EEmployee = EnEmployee.Руководитель;
+            EEmployee = EnEmployee.Manager;
         }
     }
 }
