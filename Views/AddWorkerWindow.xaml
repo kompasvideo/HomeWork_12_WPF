@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HomeWork_WPF.Views" 
         xmlns:main="clr-namespace:HomeWork_WPF" 
         xmlns:viewmodels="clr-namespace:HomeWork_WPF.ViewModels" 
-        d:DataContext="{d:DesignInstance Type=viewmodels:AddWorkerViewModel}"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Добавить сотрудника" Height="235" Width="410" WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -33,7 +33,11 @@
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="tbAge" Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" Width="140"  HorizontalAlignment="Left" Margin="0,4"/>
         <Label Grid.Row="4" Grid.Column="0" Content="Должность: " HorizontalAlignment="Right"/>
         <ComboBox Grid.Row="4" Grid.Column="1" x:Name="lbEmployees" Width="140"  HorizontalAlignment="Left" Margin="0,2"
-                  SelectedValue="{Binding Job}" ItemsSource="{Binding Source={StaticResource main},Path=DeveloperList, UpdateSourceTrigger=PropertyChanged}"/>
+         SelectedValue="{Binding Path=Job, UpdateSourceTrigger=PropertyChanged}">
+            <sys:String>Рабочий</sys:String>
+            <sys:String>Интерн</sys:String>
+            <sys:String>Руководитель</sys:String>
+        </ComboBox> 
         <Button Grid.Row="5" Grid.Column="0" Content="OK" Width="80" Height="20" 
                 HorizontalAlignment="Right" Margin="0,0,40,0" IsDefault="True" Command="{Binding bOK_Click}"/>
         <Button Grid.Row="5" Grid.Column="1" Content="Отмена" Width="80" 

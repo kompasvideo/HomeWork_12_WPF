@@ -18,16 +18,16 @@ namespace HomeWork_WPF.ViewModels
     class MainViewModel : ViewModelBase
     {
         // Список отделов
-        public static ObservableCollection<Department> Departments { get; set; }
+        public ObservableCollection<Department> Departments { get; set; }
         // Список сотрудников
         public static ObservableCollection<Employee> Employees { get; set; }
         // Список сотрудников для считывания из Json
         private List<Worker> _listEmployees;
-        private static int _iterator;
+        private int _iterator;
         /// <summary>
         /// Выбранный Employee в ListView
         /// </summary>
-        public static Employee SelectedEmployee { get; set; }
+        public Employee SelectedEmployee { get; set; }
         /// <summary>
         /// Руководитель выделенного отдела
         /// </summary>
@@ -57,7 +57,6 @@ namespace HomeWork_WPF.ViewModels
             string json = File.ReadAllText("departments.json");
             Departments = JsonConvert.DeserializeObject<ObservableCollection<Department>>(json);
             json = File.ReadAllText("employees.json");
-            //Employees = JsonConvert.DeserializeObject<ObservableCollection<Employee>>(json);
             Employees = new ObservableCollection<Employee>();
             _listEmployees = JsonConvert.DeserializeObject<List<Worker>>(json);
             ListToObservableCollection();
@@ -250,7 +249,7 @@ namespace HomeWork_WPF.ViewModels
         /// <param name="employee"></param>
         public static void ReturnAddWorker(Employee employee)
         {
-            Employees.Add(employee);
+            Employees.Add(employee);          
         }
         /// <summary>
         /// Команда "Удалить сотрудника"

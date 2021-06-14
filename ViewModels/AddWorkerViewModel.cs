@@ -58,14 +58,6 @@ namespace HomeWork_WPF.ViewModels
                 employee.Job = value;
             }
         }
-        /// <summary>
-        /// Должность сотрудника
-        /// </summary>
-        public EnEmployee EEmployee
-        {
-            get { return employee.EEmployee; }
-            set { employee.EEmployee = value; }
-        }
         public Department SelectDepartment { get; set; }
         /// <summary>
         /// Конструктор
