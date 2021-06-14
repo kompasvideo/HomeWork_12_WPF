@@ -50,6 +50,17 @@ namespace HomeWork_WPF.ViewModels
         /// <summary>
         /// Должность сотрудника
         /// </summary>
+        public string Job
+        {
+            get { return employee.Job; }
+            set
+            {
+                employee.Job = value;
+            }
+        }
+        /// <summary>
+        /// Должность сотрудника
+        /// </summary>
         public EnEmployee EEmployee
         {
             get { return employee.EEmployee; }
@@ -80,17 +91,17 @@ namespace HomeWork_WPF.ViewModels
                     {
                         if (window.Title == "Добавить сотрудника")
                         {
-                            switch (employee.EEmployee)
+                            switch (Job)
                             {
-                                case EnEmployee.Manager:
+                                case "Руководитель":
                                     l_employee = new Manager(FirstName, LastName, Age, SelectDepartment.DepartmentId);
                                     Messenger.Default.Send(l_employee);
                                     break;
-                                case EnEmployee.Worker:
+                                case "Рабочий":
                                     l_employee = new Worker(FirstName, LastName, Age, SelectDepartment.DepartmentId);
                                     Messenger.Default.Send(l_employee);
                                     break;
-                                case EnEmployee.Intern:
+                                case "Интерн":
                                     l_employee = new Intern(FirstName, LastName, Age, SelectDepartment.DepartmentId);
                                     Messenger.Default.Send(l_employee);
                                     break;
